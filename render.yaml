@@ -1,0 +1,70 @@
+# Render.com deployment configuration for Kashmiri Lodges Backend
+
+services:
+  # Backend Web Service
+  - type: web
+    name: kashmiri-lodges-backend
+    env: node
+    region: singapore # Ya phir oregon, frankfurt (closest to Pakistan)
+    plan: free # Free tier ya phir paid plan
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true # Auto-generate secure secret
+      - key: JWT_EXPIRE
+        value: 24h
+      # Database - Render PostgreSQL ya external MySQL
+      - key: DB_HOST
+        fromDatabase:
+          name: kashmiri-lodges-db
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: kashmiri-lodges-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: kashmiri-lodges-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: kashmiri-lodges-db
+          property: database
+      - key: DB_PORT
+        fromDatabase:
+          name: kashmiri-lodges-db
+          property: port
+      # Email Configuration
+      - key: SMTP_HOST
+        value: smtp.hostinger.com
+      - key: SMTP_PORT
+        value: 465
+      - key: EMAIL_USER
+        sync: false # Manual entry in dashboard
+      - key: EMAIL_PASSWORD
+        sync: false # Manual entry (secret)
+      - key: ADMIN_EMAIL
+        value: booking@kashmirilodges.pk
+      # WhatsApp API
+      - key: WHATSAPP_API_TOKEN
+        sync: false # Manual entry (secret)
+      - key: WHATSAPP_PHONE_NUMBER
+        sync: false # Manual entry
+      # File Upload
+      - key: MAX_FILE_SIZE
+        value: 5242880
+      - key: UPLOAD_PATH
+        value: ./uploads
+
+# Database (Optional - use external MySQL if preferred)
+databases:
+  - name: kashmiri-lodges-db
+    databaseName: kashmiri_lodges
+    user: admin
+    plan: free # Free PostgreSQL instance
