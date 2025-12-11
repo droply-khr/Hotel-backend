@@ -1,70 +1,80 @@
-# Render.com deployment configuration for Kashmiri Lodges Backend
+# Render.com deployment configuration for Kashmir Lodges Backend
 
 services:
-  # Backend Web Service
+  # Backend API Web Service
   - type: web
-    name: kashmiri-lodges-backend
+    name: kashmir-lodges-api
     env: node
-    region: singapore # Ya phir oregon, frankfurt (closest to Pakistan)
-    plan: free # Free tier ya phir paid plan
+    region: singapore # Closest to Pakistan (oregon, frankfurt alternatives)
+    plan: free # Free tier: 750 hrs/month, spins down after 15 min inactivity
+    branch: main
     buildCommand: npm install
     startCommand: npm start
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
       - key: JWT_SECRET
-        generateValue: true # Auto-generate secure secret
+        generateValue: true # Auto-generate secure JWT secret
       - key: JWT_EXPIRE
         value: 24h
-      # Database - Render PostgreSQL ya external MySQL
+      # CORS - Add your Hostinger domain
+      - key: CORS_ORIGIN
+        value: https://yourdomain.com # CHANGE THIS!
+      # Database connection from PostgreSQL service
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kashmir-lodges-db
+          property: connectionString
       - key: DB_HOST
         fromDatabase:
-          name: kashmiri-lodges-db
+          name: kashmir-lodges-db
           property: host
       - key: DB_USER
         fromDatabase:
-          name: kashmiri-lodges-db
+          name: kashmir-lodges-db
           property: user
       - key: DB_PASSWORD
         fromDatabase:
-          name: kashmiri-lodges-db
+          name: kashmir-lodges-db
           property: password
       - key: DB_NAME
         fromDatabase:
-          name: kashmiri-lodges-db
+          name: kashmir-lodges-db
           property: database
       - key: DB_PORT
         fromDatabase:
-          name: kashmiri-lodges-db
+          name: kashmir-lodges-db
           property: port
-      # Email Configuration
+      # Email Configuration - Set these manually in Render dashboard
       - key: SMTP_HOST
-        value: smtp.hostinger.com
+        value: smtp.gmail.com
       - key: SMTP_PORT
-        value: 465
+        value: 587
       - key: EMAIL_USER
-        sync: false # Manual entry in dashboard
+        sync: false # Set manually in Render dashboard
       - key: EMAIL_PASSWORD
-        sync: false # Manual entry (secret)
+        sync: false # Set manually (use app-specific password)
       - key: ADMIN_EMAIL
         value: booking@kashmirilodges.pk
-      # WhatsApp API
+      # WhatsApp API (Optional)
       - key: WHATSAPP_API_TOKEN
-        sync: false # Manual entry (secret)
+        sync: false # Set manually if using WhatsApp
       - key: WHATSAPP_PHONE_NUMBER
-        sync: false # Manual entry
+        sync: false
       # File Upload
       - key: MAX_FILE_SIZE
         value: 5242880
       - key: UPLOAD_PATH
-        value: ./uploads
+        value: /tmp/uploads
 
-# Database (Optional - use external MySQL if preferred)
+# PostgreSQL Database
 databases:
-  - name: kashmiri-lodges-db
-    databaseName: kashmiri_lodges
-    user: admin
-    plan: free # Free PostgreSQL instance
+  - name: kashmir-lodges-db
+    databaseName: kashmir_lodges
+    user: kashmir_user
+    plan: free # Free: 1 GB storage, expires after 90 days
+    region: singapore # Same region as web service
+    ipAllowList: [] # Allow all IPs (for development)

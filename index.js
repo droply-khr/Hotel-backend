@@ -17,6 +17,10 @@ const orderRoutes = require('./routes/order.routes');
 const staffRoutes = require('./routes/staff.routes');
 const inventoryRoutes = require('./routes/inventory.routes');
 const emailRoutes = require('./routes/email.routes');
+const guestRoutes = require('./routes/guest.routes');
+const paymentRoutes = require('./routes/payment.routes');
+const housekeepingRoutes = require('./routes/housekeeping.routes');
+const procurementRoutes = require('./routes/procurement.routes');
 
 const app = express();
 
@@ -27,9 +31,11 @@ app.use(helmet());
 const allowedOrigins = [
   'https://kashmirilodges.pk',
   'https://www.kashmirilodges.pk',
+  'https://kashmiri-lodges.hostinger.com',
   'http://localhost:5173', // Vite dev server
   'http://localhost:5174',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'http://127.0.0.1:5173'
 ];
 
 app.use(cors({
@@ -87,6 +93,10 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/email', emailRoutes);
+app.use('/api/guests', guestRoutes);
+app.use('/api/payments', paymentRoutes);
+app.use('/api/housekeeping', housekeepingRoutes);
+app.use('/api/procurement', procurementRoutes);
 
 // Error handling
 app.use(errorHandler);
