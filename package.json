@@ -2,11 +2,11 @@
   "name": "kashmiri-lodges-backend",
   "version": "1.0.0",
   "description": "Backend server for Kashmiri Lodges hotel management system",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
-    "seed": "node src/utils/seed.js",
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "seed": "node utils/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
